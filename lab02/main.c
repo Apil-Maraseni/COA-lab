@@ -1,170 +1,92 @@
 #include <stdio.h>
-#include <math.h>
- 
-int a = 0,b = 0, c = 0, a1 = 0, b1 = 0, com[5] = { 1, 0, 0, 0, 0};
-int anum[5] = {0}, anumcp[5] = {0}, bnum[5] = {0};
-int acomp[5] = {0}, bcomp[5] = {0}, pro[5] = {0}, res[5] = {0};
- 
-void binary(){
-     a1 = fabs(a);
-     b1 = fabs(b);
-     int r, r2, i, temp;
-     for (i = 0; i < 5; i++){
-           r = a1 % 2;
-           a1 = a1 / 2;
-           r2 = b1 % 2;
-           b1 = b1 / 2;
-           anum[i] = r;
-           anumcp[i] = r;
-           bnum[i] = r2;
-           if(r2 == 0){
-                bcomp[i] = 1;
-           }
-           if(r == 0){
-                acomp[i] =1;
-           }
-     }
-   //part for two's complementing
-   c = 0;
-   for ( i = 0; i < 5; i++){
-           res[i] = com[i]+ bcomp[i] + c;
-           if(res[i] >= 2){
-                c = 1;
-           }
-           else
-                c = 0;
-           res[i] = res[i] % 2;
-     }
-   for (i = 4; i >= 0; i--){
-     bcomp[i] = res[i];
-   }
-   //in case of negative inputs
-   if (a < 0){
-      c = 0;
-     for (i = 4; i >= 0; i--){
-           res[i] = 0;
-     }
-     for ( i = 0; i < 5; i++){
-           res[i] = com[i] + acomp[i] + c;
-           if (res[i] >= 2){
-                c = 1;
-           }
-           else
-                c = 0;
-           res[i] = res[i]%2;
-     }
-     for (i = 4; i >= 0; i--){
-           anum[i] = res[i];
-           anumcp[i] = res[i];
-     }
- 
-   }
-   if(b < 0){
-     for (i = 0; i < 5; i++){
-           temp = bnum[i];
-           bnum[i] = bcomp[i];
-           bcomp[i] = temp;
-     }
-   }
+#include <conio.h>
+
+// Function to perform binary addition
+int binaryAddition(int a, int b) {
+    int carry = 0, result = 0, bit = 1;
+    while (a != 0 || b != 0) {
+        int bit_a = a % 10;
+        int bit_b = b % 10;
+
+        // Add the bits along with the carry
+        int sum = bit_a + bit_b + carry;
+
+        // Update the result
+        result += (sum % 2) * bit;
+
+        // Calculate the carry for the next bit
+        carry = sum / 2;
+
+        // Move to the next bit
+        a /= 10;
+        b /= 10;
+        bit *= 10;
+    }
+
+    // Add the carry if exists
+    result += carry * bit;
+    return result;
 }
-void add(int num[]){
-    int i;
-    c = 0;
-    for ( i = 0; i < 5; i++){
-           res[i] = pro[i] + num[i] + c;
-           if (res[i] >= 2){
-                c = 1;
-           }
-           else{
-                c = 0;
-           } 
-           res[i] = res[i]%2;
-     }
-     for (i = 4; i >= 0; i--){
-         pro[i] = res[i];
-         printf("%d",pro[i]);
-     }
-   printf(":");
-   for (i = 4; i >= 0; i--){
-           printf("%d", anumcp[i]);
-     }
+
+// Function to perform logical shift left
+int logicalShiftLeft(int num) {
+    return num * 10; // Equivalent to shifting left by 1 position
 }
-void arshift(){//for arithmetic shift right
-    int temp = pro[4], temp2 = pro[0], i;
-    for (i = 1; i < 5  ; i++){//shift the MSB of product
-       pro[i-1] = pro[i];
-    }
-    pro[4] = temp;
-    for (i = 1; i < 5  ; i++){//shift the LSB of product
-        anumcp[i-1] = anumcp[i];
-    }
-    anumcp[4] = temp2;
-    printf("\nAR-SHIFT: ");//display together
-    for (i = 4; i >= 0; i--){
-        printf("%d",pro[i]);
-    }
-    printf(":");
-    for(i = 4; i >= 0; i--){
-        printf("%d", anumcp[i]);
-    }
+
+// Function to perform logical shift right
+int logicalShiftRight(int num) {
+    return num / 10; // Equivalent to shifting right by 1 position
 }
- 
-void main(){
-   int i, q = 0;
-   printf("\t\tBOOTH'S MULTIPLICATION ALGORITHM");
-   printf("\nEnter two numbers to multiply: ");
-   printf("\nBoth must be less than 16");
-   //simulating for two numbers each below 16
-   do{
-        printf("\nEnter A: ");
-        scanf("%d",&a);
-        printf("Enter B: ");
-        scanf("%d", &b);
-     }while(a >=16 || b >=16);
- 
-    printf("\nExpected product = %d", a * b);
-    binary();
-    printf("\n\nBinary Equivalents are: ");
-    printf("\nA = ");
-    for (i = 4; i >= 0; i--){
-        printf("%d", anum[i]);
+
+// Function to perform Booth's multiplication algorithm
+int boothMultiply(int multiplicand, int multiplier) {
+    int accumulator = 0;
+    int bitMask = 1;
+
+    // Iterate over each bit of the multiplier
+    while (multiplier != 0) {
+        // Step 2: Test Y0; if it is 1, add content of X to the accumulator A
+        if (multiplier % 10 == 1) {
+            accumulator = binaryAddition(accumulator, multiplicand);
+        }
+
+        // Step 3: Logical Shift the content of X left one position and content of Y right one position
+        multiplicand = logicalShiftLeft(multiplicand);
+        multiplier = logicalShiftRight(multiplier);
+
+        // Move the bit mask to the next bit
+        bitMask *= 10;
     }
-    printf("\nB = ");
-    for (i = 4; i >= 0; i--){
-        printf("%d", bnum[i]);
-    }
-    printf("\nB'+ 1 = ");
-    for (i = 4; i >= 0; i--){
-        printf("%d", bcomp[i]);
-    }
-    printf("\n\n");
-    for (i = 0;i < 5; i++){
-           if (anum[i] == q){//just shift for 00 or 11
-               printf("\n-->");
-               arshift();
-               q = anum[i];
-           }
-           else if(anum[i] == 1 && q == 0){//subtract and shift for 10
-              printf("\n-->");
-              printf("\nSUB B: ");
-              add(bcomp);//add two's complement to implement subtraction
-              arshift();
-              q = anum[i];
-           }
-           else{//add ans shift for 01
-              printf("\n-->");
-              printf("\nADD B: ");
-              add(bnum);
-              arshift();
-              q = anum[i];
-           }
-     }
- 
-     printf("\nProduct is = ");
-     for (i = 4; i >= 0; i--){
-           printf("%d", pro[i]);
-     }
-     for (i = 4; i >= 0; i--){
-           printf("%d", anumcp[i]);
-     }
+
+    return accumulator;
 }
+
+// Function to convert binary number to decimal
+int binaryToDecimal(int binary) {
+    int decimal = 0, base = 1;
+    while (binary != 0) {
+        int lastDigit = binary % 10;
+        decimal += lastDigit * base;
+        binary /= 10;
+        base *= 2;
+    }
+    return decimal;
+}
+
+int main() {
+    int multiplicand, multiplier;
+    printf("Enter the multiplicand (binary): ");
+    scanf("%d", &multiplicand);
+    printf("Enter the multiplier (binary): ");
+    scanf("%d", &multiplier);
+
+    // Step 1: Clear the accumulator (sum)
+    int product = boothMultiply(multiplicand, multiplier);
+
+    printf("Product of the two binary numbers: %d (binary)\n", product);
+    printf("Product in decimal: %d\n", binaryToDecimal(product));
+
+    getch();
+    return 0;
+}
+
