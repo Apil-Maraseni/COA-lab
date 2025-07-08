@@ -24,7 +24,6 @@ void binary(){
                 acomp[i] =1;
            }
      }
-   //part for two's complementing
    c = 0;
    for ( i = 0; i < 5; i++){
            res[i] = com[i]+ bcomp[i] + c;
@@ -38,7 +37,6 @@ void binary(){
    for (i = 4; i >= 0; i--){
      bcomp[i] = res[i];
    }
-   //in case of negative inputs
    if (a < 0){
       c = 0;
      for (i = 4; i >= 0; i--){
@@ -114,7 +112,6 @@ void main(){
    printf("\t\tBOOTH'S MULTIPLICATION ALGORITHM");
    printf("\nEnter two numbers to multiply: ");
    printf("\nBoth must be less than 16");
-   //simulating for two numbers each below 16
    do{
         printf("\nEnter A: ");
         scanf("%d",&a);
