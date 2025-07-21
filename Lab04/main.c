@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <conio.h>
 #include <math.h>
-
 int a=0,b=0,c=0,com[5]={1,0,0,0,0},s=0;
 int anum[5]={0},anumcp[5] ={0},bnum[5]={0};
 int acomp[5]={0},bcomp[5]={0},rem[5]={0},quo[5]={0},res[5]={0};
-
 void binary(){
      a = fabs(a);
      b = fabs(b);
@@ -25,7 +23,7 @@ void binary(){
                 acomp[i] =1;
            }
      }
-   //part for two's complementing
+
    c = 0;
    for( i = 0; i < 5; i++){
            res[i] = com[i]+ bcomp[i] + c;
@@ -80,26 +78,22 @@ void shl(){//for shift left
            printf("%d",anumcp[i]);
      }
 }
-
 int main(){
      int i;
      printf("\t\tRESTORING DIVISION ALGORITHM");
      printf("\nEnter two numbers to multiply: ");
      printf("\nBoth must be less than 16");
-     //simulating for two numbers each below 16
      do{
            printf("\nEnter A: ");
            scanf("%d",&a);
            printf("Enter B: ");
            scanf("%d",&b);
      }while(a>=16 || b>=16);
-
      printf("\nExpected Quotient = %d", a/b);
      printf("\nExpected Remainder = %d", a%b);
      if(a*b <0){
            s = 1;
      }
-
      binary();
      printf("\n\nUnsigned Binary Equivalents are: ");
      printf("\nA = ");
@@ -115,7 +109,6 @@ int main(){
            printf("%d",bcomp[i]);
      }
      printf("\n\n-->");
-     //division part
      shl();
      for(i=0;i<5;i++){
            printf("\n-->"); //start with subtraction
@@ -132,7 +125,6 @@ int main(){
            }
            if(i<4)
                 shl();
-
      }
      printf("\n----------------------------");
      printf("\nSign of the result = %d",s);
@@ -145,5 +137,4 @@ int main(){
            printf("%d",anumcp[i]);
      }
 getch();
-
 }
